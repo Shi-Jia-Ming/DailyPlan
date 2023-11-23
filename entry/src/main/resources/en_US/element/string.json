@@ -1,0 +1,44 @@
+{
+  "string": [
+    {
+      "name": "module_desc",
+      "value": "module description"
+    },
+    {
+      "name": "EntryAbility_desc",
+      "value": "description"
+    },
+    {
+      "name": "EntryAbility_label",
+      "value": "label"
+    },
+    {
+      "name": "MONDAY",
+      "value": "Mon"
+    },
+    {
+      "name": "TUESDAY",
+      "value": "Tues"
+    },
+    {
+      "name": "WEDNESDAY",
+      "value": "Wed"
+    },
+    {
+      "name": "THURSDAY",
+      "value": "Thur"
+    },
+    {
+      "name": "FRIDAY",
+      "value": "Fri"
+    },
+    {
+      "name": "SATURDAY",
+      "value": "Sat"
+    },
+    {
+      "name": "SUNDAY",
+      "value": "Sun"
+    }
+  ]
+}

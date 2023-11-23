@@ -1,0 +1,44 @@
+{
+  "string": [
+    {
+      "name": "module_desc",
+      "value": "模块描述"
+    },
+    {
+      "name": "EntryAbility_desc",
+      "value": "description"
+    },
+    {
+      "name": "EntryAbility_label",
+      "value": "label"
+    },
+    {
+      "name": "MONDAY",
+      "value": "一"
+    },
+    {
+      "name": "TUESDAY",
+      "value": "二"
+    },
+    {
+      "name": "WEDNESDAY",
+      "value": "三"
+    },
+    {
+      "name": "THURSDAY",
+      "value": "四"
+    },
+    {
+      "name": "FRIDAY",
+      "value": "五"
+    },
+    {
+      "name": "SATURDAY",
+      "value": "六"
+    },
+    {
+      "name": "SUNDAY",
+      "value": "日"
+    }
+  ]
+}
