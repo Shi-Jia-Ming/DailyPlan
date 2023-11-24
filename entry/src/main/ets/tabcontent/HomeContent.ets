@@ -2,18 +2,23 @@ import systemDateTime from '@ohos.systemDateTime';
 import router from '@ohos.router';
 import { WeekDaysList, Weekday } from '../constant/WeekDaysList';
 import { getDayList, DateItem } from '../datalist/CurrentDateList';
-import { getTodoItemByDate, TodoItem } from '../datalist/TodoItemList';
-import TodoTable from '../datalist/tables/TodoTable';
+import { TodoItem } from '../datalist/TodoItemList';
+import TodoTable from '../databaseability/tables/TodoTable';
 import hilog from '@ohos.hilog';
+
+// 注册为软件状态
+AppStorage.SetAndLink('todoList', []);
 
 @Component
 export struct HomeContent {
 
   numList: Array<number> = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34];
 
-  @State currentDate: DateItem = { year: 2023, month: 11, date: 22, day: 3, type: 'none', isSelected: true, isToday: true, todoList: null };
-  @State @Watch('onSelectedChanged') selectedDate: DateItem = { year: 0, month: 0, date: 0, day: 0, type: 'none', isSelected: true, isToday: true, todoList: null  };
+  // 今天的日期
+  @State currentDate: DateItem = { year: 2023, month: 11, date: 22, day: 3, type: 'none', todoList: null };
 
+  // 当前选中的日期
+  @State @Watch('onSelectedChanged') selectedDate: DateItem = { year: 0, month: 0, date: 0, day: 0, type: 'none', todoList: null  };
   // @Watch 选中的日期更新后重新查找日期对应的代办列表
   onSelectedChanged() {
     this.getCurrentDayTodo();
@@ -21,9 +26,9 @@ export struct HomeContent {
 
   @State isShown: boolean = true;
 
-  @State currentDateList: Array<DateItem> = getDayList(this.currentDate, this.selectedDate);
+  @State currentDateList: Array<DateItem> = getDayList(this.currentDate);
 
-  @State todoList: TodoItem[] = [];
+  @StorageLink('todoList') todoList: TodoItem[] = [];
 
   @State addPopup: boolean = false;
 
@@ -47,9 +52,6 @@ export struct HomeContent {
   aboutToAppear() {
     this.getCurrentTime();
     this.getCurrentDayTodo();
-
-    // 注册为软件状态
-    AppStorage.SetAndLink('todoList', this.todoList);
   }
 
   onPageShow() {
@@ -62,7 +64,7 @@ export struct HomeContent {
     hilog.info(0x0000, '[Debug.HomeContent]', this.selectedDate.year.toString() + this.selectedDate.month.toString() + this.selectedDate.date.toString())
     this.todoTable.queryByDate(this.selectedDate.year, this.selectedDate.month, this.selectedDate.date, (result: TodoItem[]) => {
       this.todoList = result;
-    }, false);
+    });
   }
 
   getCurrentTime() {
@@ -218,10 +220,7 @@ export struct HomeContent {
     .justifyContent(FlexAlign.Start)
     .onClick(() => {
       animateTo({ duration: 100, curve: Curve.EaseInOut }, () => {
-        this.selectedDate.isSelected = false;
-        dateItem.isSelected = true;
         this.selectedDate = dateItem;
-        this.todoList = getTodoItemByDate(this.selectedDate);
       })
     })
   }

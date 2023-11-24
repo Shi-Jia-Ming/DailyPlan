@@ -1,5 +1,5 @@
 import { HomeContent } from '../tabcontent/HomeContent';
-import TodoTable from '../datalist/tables/TodoTable';
+import TodoTable from '../databaseability/tables/TodoTable';
 
 @Entry
 @Component

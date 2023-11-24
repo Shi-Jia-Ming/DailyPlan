@@ -1,6 +1,6 @@
 import router from '@ohos.router'
 import hilog from '@ohos.hilog';
-import TodoTable from '../datalist/tables/TodoTable';
+import TodoTable from '../databaseability/tables/TodoTable';
 import { TodoItem } from '../datalist/TodoItemList';
 
 
@@ -241,6 +241,8 @@ struct AddTodoPage {
               }
               this.todoList.push(todoItem);
               this.todoTable.insertData(todoItem, () => {});
+              this.title = '';
+              this.content = '';
               router.back({
                 url: "pages/Index",
                 params: true

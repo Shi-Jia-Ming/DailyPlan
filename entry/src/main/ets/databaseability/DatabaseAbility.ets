@@ -1,8 +1,7 @@
-
 import relationalStore from '@ohos.data.relationalStore'
 import hilog from '@ohos.hilog';
 
-
+// 数据库连接基类
 export default class Rdb {
   private rdbStore: relationalStore.RdbStore | null = null;
 
@@ -56,15 +55,16 @@ export default class Rdb {
     }
     let resFlag: boolean = false;
     const valueBucket: relationalStore.ValuesBucket = data;
+    hilog.info(0x0000, '[Debug.Rdb]', JSON.stringify(valueBucket));
     if (this.rdbStore) {
       this.rdbStore.insert(this.tableName, valueBucket, (err, ret) => {
         if (err) {
-          hilog.info(0x0000, '[Debug.Rdb]', `insertData() failed, err: ${JSON.stringify(err)}`);
+          hilog.info(0x0000, '[Debug.Rdb]', `insert data failed, err: ${JSON.stringify(err)}`);
 
           callback(resFlag);
           return;
         }
-        hilog.info(0x0000, '[Debug.Rdb]', `insertData() finished: ${ret}`);
+        hilog.info(0x0000, '[Debug.Rdb]', `insert data finished: ${ret}`);
 
         callback(ret);
       });
@@ -81,11 +81,11 @@ export default class Rdb {
     if (this.rdbStore) {
       this.rdbStore.delete(predicates, (err, ret) => {
         if (err) {
-          hilog.info(0x0000, '[Debug.Rdb]', `deleteData() failed, err: ${err}`);
+          hilog.info(0x0000, '[Debug.Rdb]', `delete data failed, err: ${err}`);
           callback(resFlag);
           return;
         }
-        hilog.info(0x0000, '[Debug.Rdb]', `deleteData() finished: ${ret}`);
+        hilog.info(0x0000, '[Debug.Rdb]', `delete data finished: ${ret}`);
         callback(!resFlag);
       });
     }
@@ -102,11 +102,11 @@ export default class Rdb {
     if (this.rdbStore) {
       this.rdbStore.update(valueBucket, predicates, (err, ret) => {
         if (err) {
-          hilog.info(0x0000, '[Debug.Rdb]', `updateData failed, err: ${err}`);
+          hilog.info(0x0000, '[Debug.Rdb]', `update data failed, err: ${err}`);
           callback(resFlag);
           return;
         }
-        hilog.info(0x0000, '[Debug.Rdb]', `updateData() finished: ${ret}`);
+        hilog.info(0x0000, '[Debug.Rdb]', `update data finished: ${ret}`);
         callback(!resFlag);
       });
     }
@@ -120,10 +120,10 @@ export default class Rdb {
     } else if (this.rdbStore) {
       this.rdbStore.query(predicates, this.columns, (err, resultSet) => {
         if (err) {
-          hilog.info(0x0000, '[Debug.Rdb]', `query() failed, err: ${err}`);
+          hilog.info(0x0000, '[Debug.Rdb]', `query failed, err: ${err}`);
           return;
         }
-        hilog.info(0x0000, '[Debug.Rdb]', 'query() finished');
+        hilog.info(0x0000, '[Debug.Rdb]', 'query finished');
         callback(resultSet);
         resultSet.close();
       });

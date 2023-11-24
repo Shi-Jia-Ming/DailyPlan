@@ -1,6 +1,8 @@
 import List from '@ohos.util.List';
+import TodoTable from '../databaseability/tables/TodoTable';
+import { TodoItem } from './TodoItemList';
 
-
+// 日期数据类型，主要用于在日历上显示
 export type DateItem = {
   // 基础属性
   year: number;
@@ -8,16 +10,12 @@ export type DateItem = {
   date: number;
   day: number;
   type: string;
-  // 状态属性
-  isSelected: boolean;
-  isToday: boolean;
   // 信息属性
   todoList: List<string>;
 };
 
-// 根据当前的年月日计算出这个月的1日是星期几
-
-export function getDayList(currentDate: DateItem, selectedDate: DateItem): Array<DateItem> {
+// 返回本月的 DateItem 列表
+export function getDayList(currentDate: DateItem): Array<DateItem> {
   const C: number = Math.floor(currentDate.year / 100);
   let Y: number = currentDate.year % 100;
   let M: number = currentDate.month;
@@ -27,7 +25,7 @@ export function getDayList(currentDate: DateItem, selectedDate: DateItem): Array
     M += 12;
     Y -= 1;
   }
-  // 根据当前日期计算星期几的公式
+  // 根据当前的年月日计算出这个月的1日是星期几
   const firstDay: number = Math.abs(Math.floor(C / 4) - 2 * C + Y + Math.floor(Y / 4) + Math.floor(13 * (M + 1) / 5) + D - 1) % 7;
 
   let currentDateList = new Array<DateItem>();
@@ -64,18 +62,21 @@ export function getDayList(currentDate: DateItem, selectedDate: DateItem): Array
   }
 
   for (let i = 0; i < day; ++i) {
-    currentDateList.push({
+    let dateItem = {
       year: currentDate.year,
       month: currentDate.month,
       date: i + 1,
       // day: (firstDay + i) % 7,
       day: firstDay + i,
       type: 'none',
-      isSelected: i + 1 == selectedDate.date,
-      isToday: i + 1 == currentDate.date,
-      // TODO todoList的获取
       todoList: null
-    })
+    };
+    // 查询并为 todoList 赋值
+    const todoTable: TodoTable = new TodoTable(() => {})
+    todoTable.queryByDate(dateItem.year, dateItem.month, dateItem.date, (result: TodoItem[]) => {
+      dateItem.todoList = result;
+    });
+    currentDateList.push(dateItem);
   }
 
   return currentDateList;
