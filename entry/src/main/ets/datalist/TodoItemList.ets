@@ -1,4 +1,4 @@
-import TodoTable from '../entryability/tables/TodoTable';
+import TodoTable from './tables/TodoTable';
 import { DateItem } from './CurrentDateList';
 
 

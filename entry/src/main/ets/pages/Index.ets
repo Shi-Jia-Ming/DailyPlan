@@ -1,9 +1,15 @@
 import { HomeContent } from '../tabcontent/HomeContent';
+import TodoTable from '../datalist/tables/TodoTable';
 
 @Entry
 @Component
 struct Index {
   @State message: string = 'Hello World'
+
+  aboutToAppear() {
+    // TODO AppStorage好像没用
+    AppStorage.SetOrCreate('todoTable', new TodoTable(() => {}));
+  }
 
   build() {
     Row() {

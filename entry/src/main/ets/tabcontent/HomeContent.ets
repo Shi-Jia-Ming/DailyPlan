@@ -1,17 +1,23 @@
 import systemDateTime from '@ohos.systemDateTime';
+import router from '@ohos.router';
 import { WeekDaysList, Weekday } from '../constant/WeekDaysList';
 import { getDayList, DateItem } from '../datalist/CurrentDateList';
 import { getTodoItemByDate, TodoItem } from '../datalist/TodoItemList';
+import TodoTable from '../datalist/tables/TodoTable';
+import hilog from '@ohos.hilog';
 
-@Entry
 @Component
 export struct HomeContent {
 
   numList: Array<number> = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34];
-  // numList: Array<number> = [1, 2, 3, 4, 5, 6, 7];
 
   @State currentDate: DateItem = { year: 2023, month: 11, date: 22, day: 3, type: 'none', isSelected: true, isToday: true, todoList: null };
-  @State selectedDate: DateItem = { year: 0, month: 0, date: 0, day: 0, type: 'none', isSelected: true, isToday: true, todoList: null  };
+  @State @Watch('onSelectedChanged') selectedDate: DateItem = { year: 0, month: 0, date: 0, day: 0, type: 'none', isSelected: true, isToday: true, todoList: null  };
+
+  // @Watch
+  onSelectedChanged() {
+    this.getCurrentDayTodo();
+  }
 
   @State isShown: boolean = true;
 
@@ -19,12 +25,30 @@ export struct HomeContent {
 
   @State todoList: TodoItem[] = [];
 
+  @State addPopup: boolean = false;
+
   firstDay: number = this.currentDateList[0].day;
   lastDay: number = this.currentDateList[this.currentDateList.length - 1].day;
+
+  @StorageLink('todoTable') todoTable: TodoTable = new TodoTable();
 
 
   aboutToAppear() {
     this.getCurrentTime();
+    this.getCurrentDayTodo();
+  }
+
+  onBackPress() {
+    this.getCurrentTime();
+    this.getCurrentDayTodo();
+  }
+
+
+  getCurrentDayTodo() {
+    hilog.info(0x0000, '[Debug.HomeContent]', this.selectedDate.year.toString() + this.selectedDate.month.toString() + this.selectedDate.date.toString())
+    this.todoTable.queryByDate(this.selectedDate.year, this.selectedDate.month, this.selectedDate.date, (result: TodoItem[]) => {
+      this.todoList = result;
+    }, false);
   }
 
   getCurrentTime() {
@@ -60,6 +84,25 @@ export struct HomeContent {
     Row() {
       Image($r('app.media.ic_public_add'))
         .width('30vp')
+        .onHover(() => {
+          this.addPopup = true;
+        })
+        // TODO
+        .bindPopup(this.addPopup, {
+          message: 'This is a popup with PopupOptions',
+        })
+        .onClick(() => {
+            router.pushUrl({
+              url: 'pages/AddTodoPage' // 目标url
+            }, router.RouterMode.Standard, (err) => {
+              if (err) {
+                console.error(`Invoke pushUrl failed, code is ${err.code}, message is ${err.message}`);
+                return;
+              }
+              console.info('Invoke pushUrl succeeded.');
+            });
+        })
+
       Image(this.isShown ? $r('app.media.ic_public_calendar_filled') : $r('app.media.ic_public_calendar'))
         .width('30vp')
         .onClick(() => {
@@ -67,20 +110,32 @@ export struct HomeContent {
             this.isShown = !this.isShown;
           })
         })
+
       Image($r('app.media.ic_public_search_filled'))
         .width('30vp')
+
       Image($r('app.media.ic_public_more'))
         .width('30vp')
+
     }
     .width('20%')
     .justifyContent(FlexAlign.SpaceBetween)
   }
 
+  // 封装新增按钮的菜单栏组件
+  @Builder addMenu() {
+    Menu() {
+      MenuItem({ content: '新建代办', labelInfo: 'Ctrl+T'})
+    }
+    .height('20vp')
+    .borderRadius(0)
+  }
+
   // 封装该页面的代办列表
-  @Builder todoItem() {
+  @Builder todoItem(todoItem: TodoItem) {
     Row() {
       Row() {
-        Text('我想要写一条特别特别特别特别长的句子')
+        Text(todoItem.title)
           .fontSize(18)
         // 设置最大长度
           .maxLines(1)
@@ -224,7 +279,7 @@ export struct HomeContent {
               List({ space: 10 }) {
                 ForEach(this.todoList, (todoItem) => {
                   ListItem() {
-                    this.todoItem();
+                    this.todoItem(todoItem);
                   }
                 })
               }

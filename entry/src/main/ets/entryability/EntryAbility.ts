@@ -1,7 +1,6 @@
 import UIAbility from '@ohos.app.ability.UIAbility';
 import hilog from '@ohos.hilog';
 import window from '@ohos.window';
-import relationalStore from '@ohos.data.relationalStore';
 
 export default class EntryAbility extends UIAbility {
   onCreate(want, launchParam) {

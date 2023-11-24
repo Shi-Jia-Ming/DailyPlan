@@ -1,7 +1,7 @@
 import relationalStore from '@ohos.data.relationalStore';
 import hilog from '@ohos.hilog';
-import Rdb from '../../datalist/DatabaseAbility'
-import { TodoItem } from '../../datalist/TodoItemList';
+import Rdb from '../DatabaseAbility'
+import { TodoItem } from '../TodoItemList';
 
 const TODO_TABLE = {
   tableName: 'todoTable',
@@ -11,7 +11,7 @@ const TODO_TABLE = {
   'title TEXT,' +
   'content TEXT,' +
   'startTime TEXT,' +
-  'endTime TEXT',
+  'endTime TEXT)',
   columns: ['id', 'date', 'title', 'content', 'startTime', 'endTime']
 };
 
@@ -27,8 +27,9 @@ export default class TodoTable {
     this.todoTable.getRdbStore(callback);
   }
 
-  insertData(todoItem: TodoItem, callback: Function) {
+  async insertData(todoItem: TodoItem, callback: Function) {
     const valueBucket: relationalStore.ValuesBucket = generateBucket(todoItem);
+    hilog.info(0x0000, '[Debug.TodoTable]', JSON.stringify(valueBucket));
     this.todoTable.insertData(valueBucket, callback);
   }
 
@@ -48,7 +49,8 @@ export default class TodoTable {
   // 通过日期查找
   queryByDate(year: number, month: number, day: number, callback: Function, isAll: boolean = true) {
     let predicates = new relationalStore.RdbPredicates(TODO_TABLE.tableName);
-    const date = year.toString()  + ',' + month.toString() + ',' + day.toString();
+    const date: string = year.toString()  + ',' + month.toString() + ',' + day.toString();
+    hilog.info(0x0000, '[Debug.TodoTable]', date);
     if (!isAll) {
       predicates.equalTo('date', date);
     }
@@ -85,6 +87,7 @@ export default class TodoTable {
           result[i] = tmp;
         }
         resultSet.goToNextRow();
+        callback(result);
       }
     });
   }
@@ -95,7 +98,7 @@ function generateBucket(todoItem: TodoItem): relationalStore.ValuesBucket {
   obj.date = todoItem.year.toString() + ',' + todoItem.month.toString() + ',' + todoItem.day.toString();
   obj.title = todoItem.title;
   obj.content = todoItem.content;
-  obj.startTime = todoItem.startTime.toLocaleDateString();
-  obj.endTime = todoItem.endTime.toLocaleDateString();
+  obj.startTime = todoItem.startTime.toLocaleTimeString();
+  obj.endTime = todoItem.endTime.toLocaleTimeString();
   return obj;
 }

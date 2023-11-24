@@ -36,12 +36,12 @@ export default class Rdb {
 
       relationalStore.getRdbStore(context, STORE_CONFIG, (err, rdb) => {
         if (err) {
-          hilog.info(0x0000, '[Debug.Rdb]', `gerRdbStore() failed, err: ${err}`);
+          hilog.info(0x0000, '[Debug.Rdb]', `create rdbStore failed, err: ${err}`);
           return;
         } else {
           this.rdbStore = rdb;
           this.rdbStore.executeSql(this.sqlCreateTable);
-          hilog.info(0x0000, '[Debug.Rdb]', 'getRdbStore() finished.');
+          hilog.info(0x0000, '[Debug.Rdb]', 'create rdbStore finished.');
           callback();
         }
       })
@@ -59,7 +59,7 @@ export default class Rdb {
     if (this.rdbStore) {
       this.rdbStore.insert(this.tableName, valueBucket, (err, ret) => {
         if (err) {
-          hilog.info(0x0000, '[Debug.Rdb]', `insertData() failed, err: ${err}`);
+          hilog.info(0x0000, '[Debug.Rdb]', `insertData() failed, err: ${JSON.stringify(err)}`);
 
           callback(resFlag);
           return;

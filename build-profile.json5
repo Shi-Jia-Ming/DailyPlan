@@ -6,9 +6,9 @@
         "type": "HarmonyOS",
         "material": {
           "certpath": "C:\\Users\\HUAWEI\\.ohos\\config\\auto_debug_DailyPlan_com.stark.dailyplan_70086000190523123.cer",
-          "storePassword": "0000001BEF5AD92103E40AEAB4E8CFE89D51CD2C5E06FDEE4509912E47BF722F25CCAFE843FBF5D75624D5",
+          "storePassword": "0000001BF0D95726402D3EE37972130E56F02A74EB03506C5ABB96EDA063F6FAFF32010326710B5D8EC82A",
           "keyAlias": "debugKey",
-          "keyPassword": "0000001B86656449A266B77CDA8240DA57C2ACDB1CED37C2DC1D4CA95E71BECB3476132898134017BC2F96",
+          "keyPassword": "0000001B6999E319392C54FD66C05D18D633230AD79FB5971046E533FD69D99AC9009FE0419144C3E11225",
           "profile": "C:\\Users\\HUAWEI\\.ohos\\config\\auto_debug_DailyPlan_com.stark.dailyplan_70086000190523123.p7b",
           "signAlg": "SHA256withECDSA",
           "storeFile": "C:\\Users\\HUAWEI\\.ohos\\config\\auto_debug_DailyPlan_com.stark.dailyplan_70086000190523123.p12"
