@@ -14,7 +14,7 @@ export struct HomeContent {
   @State currentDate: DateItem = { year: 2023, month: 11, date: 22, day: 3, type: 'none', isSelected: true, isToday: true, todoList: null };
   @State @Watch('onSelectedChanged') selectedDate: DateItem = { year: 0, month: 0, date: 0, day: 0, type: 'none', isSelected: true, isToday: true, todoList: null  };
 
-  // @Watch
+  // @Watch 选中的日期更新后重新查找日期对应的代办列表
   onSelectedChanged() {
     this.getCurrentDayTodo();
   }
@@ -32,13 +32,27 @@ export struct HomeContent {
 
   @StorageLink('todoTable') todoTable: TodoTable = new TodoTable();
 
+  @State @Watch('stackState') state: router.RouterState = router.getState();
+
+  private index: number = -1;
+
+  // @Watch
+  stackState() {
+    this.index = this.state.index;
+    hilog.info(0x0000, '[Debug.HomeContent]', this.index.toString())
+    this.getCurrentDayTodo();
+  }
+
 
   aboutToAppear() {
     this.getCurrentTime();
     this.getCurrentDayTodo();
+
+    // 注册为软件状态
+    AppStorage.SetAndLink('todoList', this.todoList);
   }
 
-  onBackPress() {
+  onPageShow() {
     this.getCurrentTime();
     this.getCurrentDayTodo();
   }

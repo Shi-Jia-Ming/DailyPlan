@@ -27,7 +27,7 @@ export default class TodoTable {
     this.todoTable.getRdbStore(callback);
   }
 
-  async insertData(todoItem: TodoItem, callback: Function) {
+  insertData(todoItem: TodoItem, callback: Function) {
     const valueBucket: relationalStore.ValuesBucket = generateBucket(todoItem);
     hilog.info(0x0000, '[Debug.TodoTable]', JSON.stringify(valueBucket));
     this.todoTable.insertData(valueBucket, callback);

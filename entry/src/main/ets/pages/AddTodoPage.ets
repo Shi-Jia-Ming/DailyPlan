@@ -21,8 +21,7 @@ struct AddTodoPage {
 
   @StorageLink('todoTable') todoTable: TodoTable = new TodoTable();
 
-  aboutToAppear() {
-  }
+  @StorageLink('todoList') todoList: TodoItem[] = [];
 
 
   // TODO 参数类型
@@ -160,7 +159,10 @@ struct AddTodoPage {
           .height('35vp')
           .margin({"top":"0.00vp","right":"0.00vp","bottom":"0.00vp","left":"15.00vp"})
           .onClick(() => {
-            router.back()
+            router.back({
+              url: "pages/Index",
+              params: false
+            })
           })
 
         Text('新建任务')
@@ -226,7 +228,7 @@ struct AddTodoPage {
           Button("确定")
             .margin({"top":"0.00vp","right":"0.00vp","bottom":"40.00vp","left":"0.00vp"})
             .width('40%')
-            .onClick(async () => {
+            .onClick(() => {
               let todoItem: TodoItem = {
                 id: 0,
                 year: this.selectedStartTime.getFullYear(),
@@ -237,8 +239,12 @@ struct AddTodoPage {
                 startTime: this.selectedStartTime,
                 endTime: this.selectedEndTime
               }
-              await this.todoTable.insertData(todoItem, () => {});
-              router.back()
+              this.todoList.push(todoItem);
+              this.todoTable.insertData(todoItem, () => {});
+              router.back({
+                url: "pages/Index",
+                params: true
+              })
             })
 
         }
